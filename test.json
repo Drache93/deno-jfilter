@@ -3,10 +3,6 @@
     "action": "GET",
     "values": {
       "vertex.ogit/_type": [
-        "ogit/Mobile/LicenceCodes",
-        "ogit/Mobile/AppInstance",
-        "ogit/Mobile/Encounter",
-        "ogit/Mobile/Account",
         "ogit/Mobile/Message"
       ]
     }
@@ -15,9 +11,7 @@
     "action": "UPDATE",
     "values": {
       "vertex.ogit/_type": [
-        "ogit/Mobile/LicenceCodes",
-        "ogit/Mobile/AppInstance",
-        "ogit/Mobile/Encounter"
+        "ogit/Mobile/Message"
       ]
     }
   }

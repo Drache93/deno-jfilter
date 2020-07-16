@@ -35,3 +35,9 @@ Expects a JSON with following format:
 ```
 
 `jfilter my-filter.json`
+
+Outputs:
+
+```
+|(&(action = GET)(|(vertex.ogit/_type = ogit/Mobile/Message)))(&(action = UPDATE)(|(vertex.ogit/_type = ogit/Mobile/Message)))
+```
