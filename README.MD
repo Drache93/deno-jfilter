@@ -6,7 +6,7 @@
   `brew install deno`
 
 * Install jfilter
-  `deno install -f --allow-read -n jfilter main.ts`
+  `deno install --allow-read -n jfilter https://cdn.jsdelivr.net/gh/Drache93/deno-jfilter@1.0/main.ts`
 
 ## Run
 
