@@ -1,5 +1,6 @@
 import * as jsdiff from "https://cdn.skypack.dev/diff@^4.0.2";
 import { red, green } from "https://deno.land/std/fmt/colors.ts";
+import { Command } from "https://deno.land/x/cliffy@v0.14.1/command/mod.ts";
 
 export class JFilter {
   private value = "";
@@ -122,15 +123,58 @@ export const parse = (data: FilterData[]) => {
   return new JFilter().or(...output).toString();
 };
 
+const SUPPORTED_KEYS = ["ogit/Auth/vertexRule", "ogit/Auth/edgeRule"];
+
+export const parseNested = (data: any): any => {
+  if (Array.isArray(data)) {
+    return parse(data);
+  }
+
+  for (const key in data) {
+    if (typeof data[key] !== "object") {
+      continue;
+    }
+
+    if (!Array.isArray(data[key])) {
+      data[key] = parseNested(data[key]);
+    }
+
+    if (SUPPORTED_KEYS.includes(key)) {
+      data[key] = parse(data[key]);
+    }
+  }
+
+  return data;
+};
+
 if (Deno.args[0]) {
-  const filename = Deno.args[0];
-  const data = await Deno.readTextFile(filename).then((f) => JSON.parse(f));
+  const { options } = await new Command()
+    .name("deno-jfilter")
+    .version("1.4")
+    .description("Create jfilters for edge and vertex rules")
+    .option(
+      "-f --file <file>",
+      "File containing JFilter in JSON format to parse"
+    )
+    .option("-n --nested", "Handle nested file input")
+    .option(
+      "-t --test [test]",
+      "String to compare results against. Not usable with '--nested' option"
+    )
+    .parse(Deno.args);
+
+  let data = await Deno.readTextFile(options.file).then((f) => JSON.parse(f));
+
+  if (options.nested) {
+    const res = parseNested(data);
+    console.log(JSON.stringify(res, undefined, 2));
+    Deno.exit(0);
+  }
 
   const filter = parse(data);
 
-  if (Deno.args[1]) {
-    const check = Deno.args[1];
-    const res = diff(filter, check);
+  if (options.test) {
+    const res = diff(filter, options.test);
 
     if (!res.result) {
       console.log("Result did not match");

@@ -1,0 +1,60 @@
+{
+    "test-data": {
+        "ogit/_organization": "test_org",
+        "ogit/description": "test_desc",
+        "ogit/Auth/vertexRule": [
+            {
+                "action": "GET",
+                "values": {
+                    "vertex.ogit/_type": [
+                        "ogit/Automation/KnowledgeItem",
+                        "ogit/Automation/AutomationIssue",
+                        "ogit/Automation/KnowledgePool"
+                    ]
+                }
+            },
+            {
+                "action": [
+                    "GET",
+                    "UPDATE",
+                    "CREATE"
+                ],
+                "values": {
+                    "vertex.ogit/_type": [
+                        "ogit/Timeseries",
+                        "ogit/Knowledge/AcquisitionSession"
+                    ]
+                }
+            }
+        ],
+        "ogit/Auth/edgeRule": [
+            {
+                "action": "CONNECT",
+                "values": [
+                    {
+                        "edge.ogit/_type": [
+                            "ogit/generates"
+                        ],
+                        "in.ogit/_type": [
+                            "ogit/Timeseries"
+                        ],
+                        "out.ogit/_type": [
+                            "ogit/Automation/KnowledgeItem"
+                        ]
+                    },
+                    {
+                        "edge.ogit/_type": [
+                            "ogit/relates"
+                        ],
+                        "in.ogit/_type": [
+                            "ogit/Knowledge/AcquisitionSession"
+                        ],
+                        "out.ogit/_type": [
+                            "ogit/Automation/AutomationIssue"
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

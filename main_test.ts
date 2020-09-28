@@ -1,6 +1,6 @@
 import { assertEquals } from "https://deno.land/std/testing/asserts.ts";
 
-import { parse, FilterData, diff } from "./main.ts";
+import { parse, parseNested, FilterData, diff } from "./main.ts";
 
 Deno.test("Jfilter #1", () => {
   const filter: FilterData[] = [
@@ -104,4 +104,78 @@ Deno.test("Jfilter #4", async () => {
   );
 
   assertEquals(d.result, true, d.output);
+});
+
+Deno.test("Jfilter #5", async () => {
+  const filter = {
+    "test-data": {
+      "ogit/_organization": "test_org",
+      "ogit/description": "test_desc",
+      "ogit/Auth/vertexRule": [
+        {
+          action: "GET",
+          values: {
+            "vertex.ogit/_type": [
+              "ogit/Automation/KnowledgeItem",
+              "ogit/Automation/AutomationIssue",
+              "ogit/Automation/KnowledgePool",
+            ],
+          },
+        },
+        {
+          action: ["GET", "UPDATE", "CREATE"],
+          values: {
+            "vertex.ogit/_type": [
+              "ogit/Timeseries",
+              "ogit/Knowledge/AcquisitionSession",
+            ],
+          },
+        },
+      ],
+      "ogit/Auth/edgeRule": [
+        {
+          action: "CONNECT",
+          values: [
+            {
+              "edge.ogit/_type": ["ogit/generates"],
+              "in.ogit/_type": ["ogit/Timeseries"],
+              "out.ogit/_type": ["ogit/Automation/KnowledgeItem"],
+            },
+            {
+              "edge.ogit/_type": ["ogit/relates"],
+              "in.ogit/_type": ["ogit/Knowledge/AcquisitionSession"],
+              "out.ogit/_type": ["ogit/Automation/AutomationIssue"],
+            },
+          ],
+        },
+      ],
+    },
+  };
+
+  const res = parseNested(filter);
+
+  const expected = {
+    "test-data": {
+      "ogit/_organization": "test_org",
+      "ogit/description": "test_desc",
+      "ogit/Auth/vertexRule": `|(&(action = GET)(|(vertex.ogit/_type = ogit/Automation/KnowledgeItem)(vertex.ogit/_type = ogit/Automation/AutomationIssue)(vertex.ogit/_type = ogit/Automation/KnowledgePool)))(&(|(action = GET)(action = UPDATE)(action = CREATE))(|(vertex.ogit/_type = ogit/Timeseries)(vertex.ogit/_type = ogit/Knowledge/AcquisitionSession)))`,
+      "ogit/Auth/edgeRule": `&(action = CONNECT)(|(&(edge.ogit/_type = ogit/generates)(in.ogit/_type = ogit/Timeseries)(out.ogit/_type = ogit/Automation/KnowledgeItem))(&(edge.ogit/_type = ogit/relates)(in.ogit/_type = ogit/Knowledge/AcquisitionSession)(out.ogit/_type = ogit/Automation/AutomationIssue)))`,
+    },
+  };
+
+  const vertexDiff = diff(
+    res["test-data"]["ogit/Auth/vertexRule"],
+    expected["test-data"]["ogit/Auth/vertexRule"]
+  );
+
+  assertEquals(vertexDiff.result, true, vertexDiff.output);
+
+  const edgeDiff = diff(
+    res["test-data"]["ogit/Auth/edgeRule"],
+    expected["test-data"]["ogit/Auth/edgeRule"]
+  );
+
+  assertEquals(edgeDiff.result, true, edgeDiff.output);
+
+  assertEquals(res, expected);
 });
