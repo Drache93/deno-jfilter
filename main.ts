@@ -150,7 +150,7 @@ export const parseNested = (data: any): any => {
 if (Deno.args[0]) {
   const { options } = await new Command()
     .name("deno-jfilter")
-    .version("1.4")
+    .version("1.4.1")
     .description("Create jfilters for edge and vertex rules")
     .option(
       "-f --file <file>",
@@ -167,7 +167,7 @@ if (Deno.args[0]) {
 
   if (options.nested) {
     const res = parseNested(data);
-    console.log(JSON.stringify(res, undefined, 2));
+    console.log(JSON.stringify(res, undefined, 4));
     Deno.exit(0);
   }
 
