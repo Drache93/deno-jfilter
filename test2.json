@@ -1,0 +1,29 @@
+[
+    {
+        "action": "CONNECT",
+        "values": [
+            {
+                "edge.ogit/_type": [
+                    "ogit/generates"
+                ],
+                "in.ogit/_type": [
+                    "ogit/Timeseries"
+                ],
+                "out.ogit/_type": [
+                    "ogit/Automation/KnowledgeItem"
+                ]
+            },
+            {
+                "edge.ogit/_type": [
+                    "ogit/relates"
+                ],
+                "in.ogit/_type": [
+                    "ogit/Automation/AcquisitionSession"
+                ],
+                "out.ogit/_type": [
+                    "ogit/Automation/AutomationIssue"
+                ]
+            }
+        ]
+    }
+]

@@ -40,7 +40,7 @@ Deno.test("Jfilter #2", () => {
 
   assertEquals(
     res,
-    `|(&(|(action = GET)(action = CREATE)(action = UPDATE)(action = DELETE))(vertex.ogit/_type = ogit/Mobile/*))`
+    `&(|(action = GET)(action = CREATE)(action = UPDATE)(action = DELETE))(vertex.ogit/_type = ogit/Mobile/*)`
   );
 });
 
@@ -61,7 +61,6 @@ Deno.test("Jfilter #3", async () => {
       values: {
         "vertex.ogit/_type": [
           "ogit/Timeseries",
-          "ogit/Automation/AutomationIssue",
           "ogit/Knowledge/AcquisitionSession",
         ],
       },
@@ -73,6 +72,35 @@ Deno.test("Jfilter #3", async () => {
   const d = diff(
     res,
     `|(&(action = GET)(|(vertex.ogit/_type = ogit/Automation/KnowledgeItem)(vertex.ogit/_type = ogit/Automation/AutomationIssue)(vertex.ogit/_type = ogit/Automation/KnowledgePool)))(&(|(action = GET)(action = UPDATE)(action = CREATE))(|(vertex.ogit/_type = ogit/Timeseries)(vertex.ogit/_type = ogit/Knowledge/AcquisitionSession)))`
+  );
+
+  assertEquals(d.result, true, d.output);
+});
+
+Deno.test("Jfilter #4", async () => {
+  const filter: FilterData[] = [
+    {
+      action: "CONNECT",
+      values: [
+        {
+          "edge.ogit/_type": ["ogit/generates"],
+          "in.ogit/_type": ["ogit/Timeseries"],
+          "out.ogit/_type": ["ogit/Automation/KnowledgeItem"],
+        },
+        {
+          "edge.ogit/_type": ["ogit/relates"],
+          "in.ogit/_type": ["ogit/Knowledge/AcquisitionSession"],
+          "out.ogit/_type": ["ogit/Automation/AutomationIssue"],
+        },
+      ],
+    },
+  ];
+
+  const res = parse(filter);
+
+  const d = diff(
+    res,
+    `&(action = CONNECT)(|(&(edge.ogit/_type = ogit/generates)(in.ogit/_type = ogit/Timeseries)(out.ogit/_type = ogit/Automation/KnowledgeItem))(&(edge.ogit/_type = ogit/relates)(in.ogit/_type = ogit/Knowledge/AcquisitionSession)(out.ogit/_type = ogit/Automation/AutomationIssue)))`
   );
 
   assertEquals(d.result, true, d.output);

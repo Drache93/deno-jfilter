@@ -64,11 +64,13 @@ export const diff = (actual: string, expected: string) => {
   };
 };
 
-export type Action = "CREATE" | "GET" | "UPDATE" | "DELETE";
+export type Action = "CREATE" | "GET" | "UPDATE" | "DELETE" | "CONNECT";
+
+export type FilterDataValue = Record<string, string[]>;
 
 export interface FilterData {
   action: Action | Action[];
-  values: Record<string, string[]>;
+  values: FilterDataValue | FilterDataValue[];
 }
 
 const getValues = (key: string, values: string[]) => {
@@ -95,14 +97,27 @@ const getActions = (actions: Action | Action[]) => {
 
 export const parse = (data: FilterData[]) => {
   let output = data.map((value) => {
-    const values = Object.keys(value.values).map((k) =>
-      getValues(k, value.values[k])
-    );
+    const v = value.values;
+
+    let values: JFilter[] = [];
+    if (Array.isArray(v)) {
+      const temp = v.map((w) =>
+        new JFilter().and(...Object.keys(w).map((k) => getValues(k, w[k])))
+      );
+
+      values = [new JFilter().or(...temp)];
+    } else {
+      values = Object.keys(v).map((k) => getValues(k, v[k]));
+    }
 
     const actions = getActions(value.action);
 
     return new JFilter().and(actions, ...values);
   });
+
+  if (output.length === 1) {
+    return output[0].toString();
+  }
 
   return new JFilter().or(...output).toString();
 };
