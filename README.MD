@@ -44,5 +44,3 @@ A correct Jfilter value can be passed in to check the JSON output
 `jfilter my-filter.json "|(&(action = GET)(|(vertex.ogit/_type = ogit/Mobile/Message)))(&(action = UPDATE)(|(vertex.ogit/_type = ogit/Mobile/Message)))"`
 
 Any differences will be highlighted
-
-test2
