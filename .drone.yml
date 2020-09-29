@@ -3,7 +3,7 @@ type: docker
 name: default
 
 steps:
-- name: test
-  image: deno
-  commands:
-  - deno test
+  - name: test
+    image: hayd/deno:alpine
+    commands:
+      - deno test
