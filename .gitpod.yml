@@ -1,7 +1,7 @@
 image: hayd/deno
 
 tasks:
-  - init: deno upgrade && deno cache
+  - init: deno cache
     command: deno test
 
 vscode:
