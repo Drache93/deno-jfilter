@@ -1,0 +1,5 @@
+image: hayd/deno
+
+tasks:
+  - init: deno upgrade && deno cache
+    command: deno test
