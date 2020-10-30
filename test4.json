@@ -1,0 +1,24 @@
+{
+    "test-data": {
+        "ogit/_organization": "test_org",
+        "ogit/description": "test_desc",
+        "ogit/Auth/vertexRule": [
+            {
+                "action": "GET",
+                "values": {
+                    "vertex.ogit/_type": [
+                        "ogit/Mobile/Message"
+                    ]
+                }
+            },
+            {
+                "action": "UPDATE",
+                "values": {
+                    "vertex.ogit/_type": [
+                        "ogit/Mobile/Message"
+                    ]
+                }
+            }
+        ]
+    }
+}

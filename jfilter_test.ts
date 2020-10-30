@@ -1,6 +1,6 @@
 import { assertEquals } from "https://deno.land/std/testing/asserts.ts";
 
-import { parse, parseNested, FilterData, diff } from "./main.ts";
+import { parse, parseNested, FilterData, diff } from "./jfilter.ts";
 
 Deno.test("Jfilter #1", () => {
   const filter: FilterData[] = [
