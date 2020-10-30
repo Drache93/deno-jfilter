@@ -70,7 +70,7 @@ export type Action = "CREATE" | "GET" | "UPDATE" | "DELETE" | "CONNECT";
 export type FilterDataValue = Record<string, string[]>;
 
 export interface FilterData {
-  action: Action | Action[];
+  action?: Action | Action[];
   values: FilterDataValue | FilterDataValue[];
 }
 
@@ -85,6 +85,10 @@ const getValues = (key: string, values: string[]) => {
 };
 
 const getActions = (actions: Action | Action[]) => {
+  if (!actions) {
+    return "";
+  }
+
   let res: any[] = Array.isArray(actions) ? actions : [actions];
 
   res = res.map((r) => `action = ${r}`);
@@ -115,6 +119,14 @@ export const parse = (data: FilterData[]) => {
       values = [new JFilter().or(...temp)];
     } else {
       values = Object.keys(v).map((k) => getValues(k, v[k]));
+    }
+
+    if (!value.action) {
+      if (values.length === 1) {
+        return values[0];
+      }
+
+      return new JFilter().and(...values);
     }
 
     const actions = getActions(value.action);

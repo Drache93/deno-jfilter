@@ -179,3 +179,22 @@ Deno.test("Jfilter #5", async () => {
 
   assertEquals(res, expected);
 });
+
+Deno.test("Jfilter #6 - No action", async () => {
+  const tests: [FilterData[], string][] = [
+    [
+      [
+        {
+          values: {
+            "vertex.ogit/_id": ["test"],
+          },
+        },
+      ],
+      "vertex.ogit/_id = test",
+    ],
+  ];
+
+  tests.forEach((t) => {
+    assertEquals(parse(t[0]), t[1]);
+  });
+});
