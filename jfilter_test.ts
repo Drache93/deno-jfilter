@@ -1,6 +1,12 @@
 import { assertEquals } from "https://deno.land/std/testing/asserts.ts";
 
-import { parse, parseNested, FilterData, diff } from "./jfilter.ts";
+import {
+  parse,
+  parseNested,
+  FilterData,
+  diff,
+  parseString,
+} from "./jfilter.ts";
 
 Deno.test("Jfilter #1", () => {
   const filter: FilterData[] = [
@@ -178,4 +184,27 @@ Deno.test("Jfilter #5", async () => {
   assertEquals(edgeDiff.result, true, edgeDiff.output);
 
   assertEquals(res, expected);
+});
+
+Deno.test("JFilter from string #1", () => {
+  const filter: FilterData[] = [
+    {
+      action: "GET",
+      values: {
+        "vertex.ogit/_type": ["ogit/Mobile/Message"],
+      },
+    },
+    {
+      action: "UPDATE",
+      values: {
+        "vertex.ogit/_type": ["ogit/Mobile/Message"],
+      },
+    },
+  ];
+
+  const res = parseString(
+    `|(&(action = GET)(vertex.ogit/_type = ogit/Mobile/Message))(&(action = UPDATE)(vertex.ogit/_type = ogit/Mobile/Message))`
+  );
+
+  assertEquals(res, filter);
 });

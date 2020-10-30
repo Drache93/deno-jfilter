@@ -152,3 +152,26 @@ export const parseNested = (data: any): any => {
 
   return data;
 };
+
+export const parseString = (input: string): FilterData[] => {
+  const data: FilterData[] = [];
+
+  for (let i = 0; i < input.length; i++) {
+    const c = input[i];
+
+    switch (c) {
+      case "|":
+        break;
+      case "&":
+        break;
+      case "(":
+        break;
+      case ")":
+        break;
+      default:
+        break;
+    }
+  }
+
+  return data;
+};
