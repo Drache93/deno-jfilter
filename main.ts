@@ -1,5 +1,3 @@
-import * as jsdiff from "https://cdn.skypack.dev/diff@^4.0.2";
-import { red, green } from "https://deno.land/std/fmt/colors.ts";
 import { Command } from "https://deno.land/x/cliffy@v0.14.1/command/mod.ts";
 import { parse, parseNested, diff } from "./jfilter.ts";
 
